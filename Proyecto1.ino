@@ -1,67 +1,71 @@
 int counter = 20;
+int boton1;
+int boton2;
+int boton3;
+const int val1 = 13;
+const int val2 = 12;
+const int val3 = 10;
 void config()
 {
  Serial.println(counter);
   if (counter <= 59 && counter >= 11)
   {
-   if (digitalRead(13)== HIGH)
-   {
-    
-   }
-   else
+   if (boton1 == HIGH)
    {
     counter++;
+    Serial.println("En el 13:");
     Serial.println(counter);
    } 
-   if (digitalRead(12)== HIGH)
-   {
-    
-   }
-   else
+   boton2 = digitalRead(val2);
+   if (boton2 == HIGH)
    {
     counter--;
+    Serial.println("En el 12:");
     Serial.println(counter);
-   }  
-   if (digitalRead(10)== HIGH)
-   {
-      
    }
-   else
+   boton3 = digitalRead(val3); 
+   if (boton3 == HIGH)
    {
-    //countDown();
-   }  
+    //countDown();  
+   } 
   }
   else if (counter = 60)
   {
-   if (digitalRead(12)== HIGH)
+   boton2 = digitalRead(val2);
+   if (boton2 == HIGH)
    {
     counter--;
+    Serial.println("En el 12:");
     Serial.println(counter);
    }
-   if (digitalRead(10)== HIGH)
+   boton3 = digitalRead(val3); 
+   if (boton3 == HIGH)
    {
-      //countDown();
-   }
+    //countDown();  
+   } 
   }
   else if (counter = 10)
   {
-   if (digitalRead(13)== HIGH)
+   boton1 = digitalRead(val1);
+   if (boton1 == HIGH)
    {
     counter++;
+    Serial.println("En el 13:");
     Serial.println(counter);
-   }
-   if (digitalRead(10)== HIGH)
+   } 
+   boton3 = digitalRead(val3); 
+   if (boton3 == HIGH)
    {
-      //countDown();
-   }
+    //countDown();  
+   } 
   }
 }
 void countDown(){}
 void setup()
 {
-  pinMode(13, INPUT);
-  pinMode(12, INPUT);
-  pinMode(10, INPUT);
+  pinMode(val1, INPUT);
+  pinMode(val2, INPUT);
+  pinMode(val3, INPUT);
  Serial.begin(115200);
  config();
 }
