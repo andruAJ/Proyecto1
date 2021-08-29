@@ -1,21 +1,62 @@
-int Counter = 20;
+int counter = 20;
 void config()
 {
- Serial.println(Counter);
-  if (digitalRead(13)== HIGH)
+ Serial.println(counter);
+  if (counter <= 59 && counter >= 11)
   {
-    Counter++;
+   if (digitalRead(13)== HIGH)
+   {
+    
+   }
+   else
+   {
+    counter++;
+    Serial.println(counter);
+   } 
+   if (digitalRead(12)== HIGH)
+   {
+    
+   }
+   else
+   {
+    counter--;
+    Serial.println(counter);
+   }  
+   if (digitalRead(10)== HIGH)
+   {
+      
+   }
+   else
+   {
+    //countDown();
+   }  
   }
-  if (digitalRead(12)== HIGH)
+  else if (counter = 60)
   {
-    Counter--;
+   if (digitalRead(12)== HIGH)
+   {
+    counter--;
+    Serial.println(counter);
+   }
+   if (digitalRead(10)== HIGH)
+   {
+      //countDown();
+   }
   }
-  if (digitalRead(10)== HIGH
+  else if (counter = 10)
   {
-      countDown();
+   if (digitalRead(13)== HIGH)
+   {
+    counter++;
+    Serial.println(counter);
+   }
+   if (digitalRead(10)== HIGH)
+   {
+      //countDown();
+   }
   }
 }
-void countDown(); 
+void countDown(){}
 void setup()
 {
   pinMode(13, INPUT);
