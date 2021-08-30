@@ -5,10 +5,13 @@ int boton3;
 const int val1 = 13;
 const int val2 = 12;
 const int val3 = 10;
+uint32_t previousMillis = 0;
+const uint32_t intervalo = 1000;
+
 void config()
 {
  Serial.println(counter);
-  if (counter <= 59 && counter >= 11)
+ if (counter <= 59 && counter >= 11)
   {
    if (boton1 == HIGH)
    {
@@ -26,7 +29,7 @@ void config()
    boton3 = digitalRead(val3); 
    if (boton3 == HIGH)
    {
-    //countDown();  
+    countDown();  
    } 
   }
   else if (counter = 60)
@@ -41,7 +44,7 @@ void config()
    boton3 = digitalRead(val3); 
    if (boton3 == HIGH)
    {
-    //countDown();  
+    countDown();  
    } 
   }
   else if (counter = 10)
@@ -56,11 +59,25 @@ void config()
    boton3 = digitalRead(val3); 
    if (boton3 == HIGH)
    {
-    //countDown();  
+    countDown();  
    } 
   }
 }
-void countDown(){}
+void countDown()
+{
+  uint32_t tiempo = millis();
+  if (tiempo - previousMillis >= intervalo) 
+  {
+    previousMillis = tiempo;
+    counter--;
+    Serial.println(counter);
+    if(counter == 0)
+    {
+      Serial.println("¡BOOM!");
+      config();
+    }
+  }
+}
 void setup()
 {
   pinMode(val1, INPUT);
@@ -72,5 +89,5 @@ void setup()
 
 void loop()
 {
-  
+  countDown();
 }
