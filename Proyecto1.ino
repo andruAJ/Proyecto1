@@ -32,7 +32,7 @@ void config()
     countDown();  
    } 
   }
-  else if (counter = 60)
+  else if (counter == 60)
   {
    boton2 = digitalRead(val2);
    if (boton2 == HIGH)
@@ -47,7 +47,7 @@ void config()
     countDown();  
    } 
   }
-  else if (counter = 10)
+  else if (counter == 10)
   {
    boton1 = digitalRead(val1);
    if (boton1 == HIGH)
@@ -89,5 +89,5 @@ void setup()
 
 void loop()
 {
-  countDown();
+  countDown(); 
 }
