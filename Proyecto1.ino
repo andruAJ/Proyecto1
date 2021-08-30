@@ -1,4 +1,5 @@
 int counter = 20;
+int limite = 20;
 int boton1;
 int boton2;
 int boton3;
@@ -29,7 +30,8 @@ void config()
    boton3 = digitalRead(val3); 
    if (boton3 == HIGH)
    {
-    countDown();  
+    countDown(); 
+    limite = counter; 
    } 
   }
   else if (counter == 60)
@@ -44,7 +46,8 @@ void config()
    boton3 = digitalRead(val3); 
    if (boton3 == HIGH)
    {
-    countDown();  
+    countDown();
+    limite = counter; 
    } 
   }
   else if (counter == 10)
@@ -59,22 +62,27 @@ void config()
    boton3 = digitalRead(val3); 
    if (boton3 == HIGH)
    {
-    countDown();  
+    countDown(); 
+    limite = counter;  
    } 
   }
 }
 void countDown()
 {
   uint32_t tiempo = millis();
-  if (tiempo - previousMillis >= intervalo) 
+  Serial.println(counter);
+  for (int i = 0; i < limite; i++)
   {
-    previousMillis = tiempo;
-    counter--;
-    Serial.println(counter);
-    if(counter == 0)
+    if (tiempo - previousMillis >= intervalo) 
     {
-      Serial.println("¡BOOM!");
-      config();
+       previousMillis = tiempo;
+       counter--;
+       Serial.println(counter);
+       if(counter == 0)
+       {
+         Serial.println("¡BOOM!");
+         config();
+       }
     }
   }
 }
@@ -89,5 +97,5 @@ void setup()
 
 void loop()
 {
-  countDown(); 
+  
 }
