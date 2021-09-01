@@ -11,8 +11,9 @@ const uint32_t intervalo = 1000;
 
 void config()
 {
+ Serial.println("En caso de activación accidental recuerde presionar el boton arm y luego la secuencia de desactivación");
  Serial.println(counter);
- if (counter <= 59 && counter >= 11)
+ /*if (counter <= 59 && counter >= 11)
   {
    if (boton1 == HIGH)
    {
@@ -65,14 +66,16 @@ void config()
     countDown(); 
     limite = counter;  
    } 
-  }
+  }*/
+ countDown();
 }
 void countDown()
 {
-  uint32_t tiempo = millis();
+  
   Serial.println(counter);
-  for (int i = 0; i < limite; i++)
+  while (counter > 0)
   {
+    uint32_t tiempo = millis();
     if (tiempo - previousMillis >= intervalo) 
     {
        previousMillis = tiempo;
@@ -97,5 +100,5 @@ void setup()
 
 void loop()
 {
-  
+   
 }
