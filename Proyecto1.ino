@@ -1,99 +1,98 @@
 int counter = 20;
-int limite = 20;
-int boton1;
-int boton2;
-int boton3;
-const int val1 = 13;
-const int val2 = 12;
-const int val3 = 10;
+int valor = 0;
 uint32_t previousMillis = 0;
 const uint32_t intervalo = 1000;
 
 void config()
 {
- Serial.println("En caso de activación accidental recuerde presionar el boton arm y luego la secuencia de desactivación");
+ Serial.println("En caso de activacion accidental recuerde presionar el boton arm y luego la secuencia de desactivacion");
  Serial.println(counter);
- /*if (counter <= 59 && counter >= 11)
+ if (counter <= 59 && counter >= 11)
   {
-   if (boton1 == HIGH)
+   if (Serial.available() > 0)
    {
-    counter++;
-    Serial.println("En el 13:");
-    Serial.println(counter);
-   } 
-   boton2 = digitalRead(val2);
-   if (boton2 == HIGH)
-   {
-    counter--;
-    Serial.println("En el 12:");
-    Serial.println(counter);
+     valor = Serial.read();
+     Serial.println(valor);
+     if (valor == 87)
+     {
+       counter++;
+       Serial.println(counter);
+     } 
+     
+     if (valor == 83)
+     {
+       counter--;
+       Serial.println(counter);
+     }
+       
+     if (valor == 32)
+     {
+       countDown(); 
+     } 
    }
-   boton3 = digitalRead(val3); 
-   if (boton3 == HIGH)
-   {
-    countDown(); 
-    limite = counter; 
-   } 
-  }
-  else if (counter == 60)
+ }  
+ else if (counter == 60)
   {
-   boton2 = digitalRead(val2);
-   if (boton2 == HIGH)
+   if (Serial.available() > 0)
    {
-    counter--;
-    Serial.println("En el 12:");
-    Serial.println(counter);
+     valor = Serial.read();
+     if (valor == 83)
+     {
+       counter--;
+       Serial.println(counter);
+     } 
+     if (valor == 32)
+     {
+       countDown();
+     }
    }
-   boton3 = digitalRead(val3); 
-   if (boton3 == HIGH)
-   {
-    countDown();
-    limite = counter; 
-   } 
   }
-  else if (counter == 10)
+ else if (counter == 10)
   {
-   boton1 = digitalRead(val1);
-   if (boton1 == HIGH)
-   {
-    counter++;
-    Serial.println("En el 13:");
-    Serial.println(counter);
-   } 
-   boton3 = digitalRead(val3); 
-   if (boton3 == HIGH)
-   {
-    countDown(); 
-    limite = counter;  
-   } 
-  }*/
- countDown();
+    if (Serial.available() > 0)
+    {
+      valor = Serial.read();
+      if (valor == 87)
+      {
+        counter++;
+        Serial.println(counter);
+      }  
+      if (valor == 32)
+      {
+        countDown(); 
+      } 
+    } 
+  }
+ //countDown();
 }
 void countDown()
 {
-  
   Serial.println(counter);
   while (counter > 0)
   {
     uint32_t tiempo = millis();
     if (tiempo - previousMillis >= intervalo) 
     {
-       previousMillis = tiempo;
-       counter--;
-       Serial.println(counter);
-       if(counter == 0)
-       {
-         Serial.println("¡BOOM!");
-         config();
-       }
+     previousMillis = tiempo;
+     counter--;
+     Serial.println(counter);
+     if(counter == 0)
+     {
+      Serial.println("¡BOOM!");
+      counter = 20;
+      config();
+     }
     }
   }
 }
+  
+void desactivacion()
+{
+
+}  
+
 void setup()
 {
-  pinMode(val1, INPUT);
-  pinMode(val2, INPUT);
-  pinMode(val3, INPUT);
  Serial.begin(115200);
  config();
 }
