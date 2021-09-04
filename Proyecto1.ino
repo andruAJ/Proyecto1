@@ -7,64 +7,67 @@ void config()
 {
  Serial.println("En caso de activacion accidental recuerde presionar el boton arm y luego la secuencia de desactivacion");
  Serial.println(counter);
- if (counter <= 59 && counter >= 11)
+ valor = Serial.read();
+ while(valor == -1 || valor == 119 || valor == 115)
   {
-   if (Serial.available() > 0)
-   {
-     valor = Serial.read();
-     Serial.println(valor);
-     if (valor == 87)
+    if (counter <= 59 && counter >= 11)
+    {
+     if (Serial.available() > 0)
      {
+      valor = Serial.read();
+      if (valor == 119)
+      {
        counter++;
        Serial.println(counter);
-     } 
+      } 
      
-     if (valor == 83)
-     {
-       counter--;
-       Serial.println(counter);
-     }
-       
-     if (valor == 32)
-     {
-       countDown(); 
-     } 
-   }
- }  
- else if (counter == 60)
-  {
-   if (Serial.available() > 0)
-   {
-     valor = Serial.read();
-     if (valor == 83)
-     {
-       counter--;
-       Serial.println(counter);
-     } 
-     if (valor == 32)
-     {
-       countDown();
-     }
-   }
-  }
- else if (counter == 10)
-  {
-    if (Serial.available() > 0)
-    {
-      valor = Serial.read();
-      if (valor == 87)
+      if (valor == 115)
       {
-        counter++;
+        counter--;
         Serial.println(counter);
-      }  
+      }
+        
       if (valor == 32)
       {
         countDown(); 
       } 
-    } 
-  }
- //countDown();
+     }
+    }  
+    else if (counter == 60)
+    {
+      if (Serial.available() > 0)
+      {
+        valor = Serial.read();
+        if (valor == 115)
+        {
+          counter--;
+          Serial.println(counter);
+        } 
+        if (valor == 32)
+        {
+          countDown();
+        }
+      }
+    }
+    else if (counter == 10)
+    {
+      if (Serial.available() > 0)
+      {
+        valor = Serial.read();
+        if (valor == 119)
+        {
+          counter++;
+          Serial.println(counter);
+        }  
+        if (valor == 32)
+        {
+          countDown(); 
+        } 
+      } 
+    }
+  } 
 }
+
 void countDown()
 {
   Serial.println(counter);
@@ -83,12 +86,17 @@ void countDown()
       config();
      }
     }
+   /* if()
+    {
+    
+    }*/
   }
 }
   
 void desactivacion()
 {
-
+  /*if (){}
+  else {}*/
 }  
 
 void setup()
