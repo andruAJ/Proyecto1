@@ -2,8 +2,9 @@ int counter = 20;
 int valor = 0;
 uint32_t previousMillis = 0;
 const uint32_t intervalo = 1000;
-int sec[6] = {{119},{115},{115},{119},{119},{32}};
+int sec[6] = {119,115,115,119,119,32};
 int correct = 0;
+int intentos = 0;
 void config()
 {
  Serial.println("En caso de activacion accidental recuerde presionar el boton arm y luego la secuencia de desactivacion");
@@ -93,23 +94,42 @@ void countDown()
     if(valor == 32 || valor == 119 || valor == 115)
     {
       comb[pos] = valor;
+      Serial.println(comb[pos]);
       pos++;
-      if (pos == 6)
+      intentos++;
+      if (intentos == 6);
       {
         for (int i = 0; i < 6; i++)
         {
           if(comb[i] == sec[i])
           {
             correct++;
+            Serial.print("número de correctas: ");
+            Serial.println(correct);
           }
           if(correct== 6)
           {
             Serial.println("Desactivacion completada");
-            Config();
+            counter = 20;
+            intentos = 0;
+            pos = 0;
+            config(); 
           }
           else
           {
-            Serial.println("INCORRECTO");
+            if (intentos == 6)
+            {
+              if (correct == 0 || correct == 1 || correct == 2 || correct == 3|| correct == 4|| correct == 5)
+              {
+                Serial.println("INCORRECTO");
+                for (int a = 0; a < 6; a++)
+                {
+                  comb[a] = 0;
+                }
+              }
+              pos = 0;
+              intentos = 0;
+            } 
           }
         }
       }
