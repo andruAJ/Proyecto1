@@ -2,9 +2,11 @@ int counter = 20;
 int valor = 0;
 uint32_t previousMillis = 0;
 const uint32_t intervalo = 1000;
-int sec[6] = {119,115,115,119,119,32};
+int sec[6] = {115,119,115,115,119,32};
 int correct = 0;
 int intentos = 0;
+int pos = 0;
+static int comb[6];
 void config()
 {
  Serial.println("En caso de activacion accidental recuerde presionar el boton arm y luego la secuencia de desactivacion");
@@ -73,8 +75,6 @@ void config()
 void countDown()
 {
   valor = -1;
-  int pos = 0;
-  static int comb[6];
   while (counter > 0)
   {
     valor = Serial.read();
@@ -93,50 +93,59 @@ void countDown()
     }
     if(valor == 32 || valor == 119 || valor == 115)
     {
+      desactivacion();
+    }
+  }
+}
+
+void desactivacion()
+{
       comb[pos] = valor;
-      Serial.println(comb[pos]);
       pos++;
       intentos++;
-      if (intentos == 6);
+      if (intentos < 6)
+      {}
+      else 
       {
         for (int i = 0; i < 6; i++)
         {
           if(comb[i] == sec[i])
           {
             correct++;
-            Serial.print("número de correctas: ");
-            Serial.println(correct);
-          }
-          if(correct== 6)
-          {
-            Serial.println("Desactivacion completada");
-            counter = 20;
-            intentos = 0;
-            pos = 0;
-            config(); 
-          }
-          else
-          {
-            if (intentos == 6)
-            {
-              if (correct == 0 || correct == 1 || correct == 2 || correct == 3|| correct == 4|| correct == 5)
-              {
-                Serial.println("INCORRECTO");
-                for (int a = 0; a < 6; a++)
-                {
-                  comb[a] = 0;
-                }
-              }
-              pos = 0;
-              intentos = 0;
-            } 
           }
         }
+        if(correct== 6)
+        {
+          Serial.println("Desactivacion completada");
+          counter = 20;
+          intentos = 0;
+          pos = 0;
+          config(); 
+        }
+        else
+        {
+          if (intentos == 6)
+          {
+            /*for (int b = 0; b<6; b++)
+            {
+              Serial.print(comb[b]);
+            }*/
+            if (correct == 0 || correct == 1 || correct == 2 || correct == 3|| correct == 4|| correct == 5)
+            {
+              correct = 0;
+              Serial.println("INCORRECTO");
+              for (int a = 0; a < 6; a++)
+              {
+                comb[a] = 0;
+              }
+              }
+            pos = 0;
+            intentos = 0;
+          } 
+        }
+        
       }
-    }
-  }
 }
-  
 void setup()
 {
  Serial.begin(115200);
