@@ -7,99 +7,111 @@ int correct = 0;
 int intentos = 0;
 int pos = 0;
 static int comb[6];
-void config()
+
+void task1()
 {
- Serial.println("En caso de activacion accidental recuerde presionar el boton arm y luego la secuencia de desactivacion");
- Serial.println(counter);
- valor = Serial.read();
- while(valor == -1 || valor == 119 || valor == 115)
+  enum Estados {CONFIG, COUNTDOWN, DESACTIVACION};
+  static Estados estadoActual = CONFIG;
+
+  
+  switch (estadoActual)
   {
-    if (counter <= 59 && counter >= 11)
+    case CONFIG: 
     {
-     if (Serial.available() > 0)
-     {
+      Serial.println(counter);
       valor = Serial.read();
-      if (valor == 119)
+      while(valor == -1 || valor == 119 || valor == 115)
       {
-       counter++;
-       Serial.println(counter);
-      } 
+        if (counter <= 59 && counter >= 11)
+        {
+          if (Serial.available() > 0)
+          {
+            valor = Serial.read();
+            if (valor == 119)
+            {
+             counter++;
+             Serial.println(counter);
+            } 
      
-      if (valor == 115)
-      {
+            if (valor == 115)
+            {
+              counter--;
+              Serial.println(counter);
+            }
+        
+            if (valor == 32)
+            {
+              estadoActual = COUNTDOWN; 
+            } 
+           }
+          }  
+          else if (counter == 60)
+          {
+            if (Serial.available() > 0)
+            {
+              valor = Serial.read();
+              if (valor == 115)
+              {
+                counter--;
+                Serial.println(counter);
+              } 
+              if (valor == 32)
+              {
+               estadoActual = COUNTDOWN;
+              }
+            }
+          }
+          else if (counter == 10)
+          {
+            if (Serial.available() > 0)
+            {
+              valor = Serial.read();
+              if (valor == 119)
+              {
+                counter++;
+                Serial.println(counter);
+              }  
+              if (valor == 32)
+              {
+               estadoActual = COUNTDOWN; 
+              } 
+            } 
+          }
+        } 
+      
+     break; 
+    }
+    
+    case COUNTDOWN:
+    {
+     valor = -1;
+     while (counter > 0)
+     {
+       valor = Serial.read();
+       uint32_t tiempo = millis();
+       if (tiempo - previousMillis >= intervalo) 
+       {
+        previousMillis = tiempo;
         counter--;
         Serial.println(counter);
-      }
-        
-      if (valor == 32)
-      {
-        countDown(); 
-      } 
-     }
-    }  
-    else if (counter == 60)
-    {
-      if (Serial.available() > 0)
-      {
-        valor = Serial.read();
-        if (valor == 115)
+        if(counter == 0)
         {
-          counter--;
-          Serial.println(counter);
-        } 
-        if (valor == 32)
-        {
-          countDown();
+         Serial.println("¡BOOM!");
+         counter = 20;
+         estadoActual = CONFIG;
         }
-      }
-    }
-    else if (counter == 10)
-    {
-      if (Serial.available() > 0)
-      {
-        valor = Serial.read();
-        if (valor == 119)
-        {
-          counter++;
-          Serial.println(counter);
-        }  
-        if (valor == 32)
-        {
-          countDown(); 
-        } 
-      } 
-    }
-  } 
-}
-
-void countDown()
-{
-  valor = -1;
-  while (counter > 0)
-  {
-    valor = Serial.read();
-    uint32_t tiempo = millis();
-    if (tiempo - previousMillis >= intervalo) 
-    {
-     previousMillis = tiempo;
-     counter--;
-     Serial.println(counter);
-     if(counter == 0)
-     {
-      Serial.println("¡BOOM!");
-      counter = 20;
-      config();
+       }
+       if(valor == 32 || valor == 119 || valor == 115)
+       {
+         estadoActual = DESACTIVACION;
+       }
      }
+      
+     break;
     }
-    if(valor == 32 || valor == 119 || valor == 115)
+    
+    case DESACTIVACION:
     {
-      desactivacion();
-    }
-  }
-}
-
-void desactivacion()
-{
       comb[pos] = valor;
       pos++;
       intentos++;
@@ -120,16 +132,12 @@ void desactivacion()
           counter = 20;
           intentos = 0;
           pos = 0;
-          config(); 
+          estadoActual = CONFIG; 
         }
         else
         {
           if (intentos == 6)
           {
-            /*for (int b = 0; b<6; b++)
-            {
-              Serial.print(comb[b]);
-            }*/
             if (correct == 0 || correct == 1 || correct == 2 || correct == 3|| correct == 4|| correct == 5)
             {
               correct = 0;
@@ -145,11 +153,22 @@ void desactivacion()
         }
         
       }
+      
+     break;
+    }
+    
+     default:
+     Serial.println("Error");
+     break;
+    
+  }
+
 }
+
 void setup()
 {
  Serial.begin(115200);
- config();
+ task1();
 }
 
 void loop()
